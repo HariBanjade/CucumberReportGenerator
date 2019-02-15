@@ -1,0 +1,30 @@
+version: "3"
+networks:
+	grid:
+		driver: overlay
+
+services:
+hub:
+	image: selenium/hub:3.1.0
+	ports:
+		-4444:4444
+	nrtworks:
+	-grid
+
+chrome:
+	image:selenium/node-chrome:3.1.0
+	depends_on:
+		-hub
+	ports:
+		-"5555:5555"
+	deploy:
+		replicas:1
+	networks:
+		-grid
+
+deploy:
+	mode:global
+	placement:
+		constraints:
+			-node.role == worker
+	
